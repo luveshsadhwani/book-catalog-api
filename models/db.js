@@ -92,16 +92,21 @@ const addBook = async (book) => {
     }
 };
 
-const updateBook = (bookToUpdate) => {
-    const index = books.findIndex((book) => book.id === bookToUpdate.id);
-    if (index === -1) {
-        const e = new Error(`Book with id ${id} not found`);
-        e.status = 404;
-        throw e;
-    }
+const updateBook = async (bookToUpdate) => {
     if (isValidBook(bookToUpdate)) {
-        books[index] = bookToUpdate;
-        return bookToUpdate;
+        const {
+            title,
+            isbn,
+            author,
+            genre,
+            number_of_pages,
+            publication_year,
+        } = bookToUpdate;
+        const result = await pool.query(
+            "UPDATE books SET title = $1, author = $2, genre = $3, number_of_pages = $4, publication_year = $5 WHERE isbn = $6 RETURNING *",
+            [title, author, genre, number_of_pages, publication_year, isbn]
+        );
+        return result.rows[0].isbn;
     }
 };
 

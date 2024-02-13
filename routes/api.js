@@ -67,16 +67,12 @@ apiRouter.post("/books", async (req, res) => {
     }
 });
 
-apiRouter.put("/book/:id", (req, res) => {
+apiRouter.put("/book/:id", async (req, res) => {
     try {
         const body = req.body;
         body.id = req.bookId;
-
-        const updatedBook = updateBook(body);
-        if (!updatedBook) {
-            throw new Error("Book could not be updated");
-        }
-        res.status(201).send(updatedBook);
+        const updatedBookId = await updateBook(body);
+        res.status(200).send(`Book modified with ISBN ${updatedBookId}`);
     } catch (err) {
         console.log(err);
         if (err.status) {
