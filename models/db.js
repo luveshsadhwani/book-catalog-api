@@ -1,3 +1,5 @@
+const { pool } = require("../db/index");
+
 const books = [
     {
         id: 1,
@@ -45,7 +47,24 @@ const isValidBook = (book) => {
     return true;
 };
 
-const getBooks = () => books;
+const isValidId = (id) => {
+    return id.length <= 13;
+};
+
+const getBooks = async () => {
+    const result = await pool.query("SELECT * FROM books");
+    return result.rows;
+};
+
+const getBookById = async (id) => {
+    if (!id) {
+        throw new Error("Missing ID!");
+    }
+    const result = await pool.query("SELECT * FROM books WHERE isbn = $1", [
+        id,
+    ]);
+    return result.rows;
+};
 
 const addBook = (book) => {
     if (isValidBook(book)) {
@@ -89,4 +108,6 @@ module.exports = {
     addBook,
     updateBook,
     deleteBook,
+    isValidId,
+    getBookById,
 };

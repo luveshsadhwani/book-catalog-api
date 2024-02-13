@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const apiRouter = require("./server/api");
+const apiRouter = require("./routes/api");
 
 const app = express();
 

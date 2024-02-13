@@ -1,24 +1,30 @@
 const express = require("express");
 const apiRouter = express.Router();
-const { books, getBooks, addBook, updateBook, deleteBook } = require("./db");
+const {
+    getBooks,
+    addBook,
+    updateBook,
+    deleteBook,
+    isValidId,
+    getBookById,
+} = require("../models/db");
 
 apiRouter.param("id", (req, res, next, id) => {
-    const bookId = Number(id);
-    if (isNaN(id)) {
-        res.status(400).send(`ID must be a number!`);
+    if (!isValidId(id)) {
+        res.status(400).send(`Please pass valid book ISBN!`);
     } else {
-        req.bookId = bookId;
+        req.bookId = id;
         next();
     }
 });
 
-apiRouter.get("/books", (req, res) => {
+apiRouter.get("/books", async (req, res) => {
     try {
-        const books = getBooks();
+        const books = await getBooks();
         if (!books) {
             throw new Error();
         }
-        res.send(books);
+        res.status(200).json(books);
     } catch (err) {
         console.log(err);
         if (err.status) {
@@ -29,10 +35,10 @@ apiRouter.get("/books", (req, res) => {
     }
 });
 
-apiRouter.get("/book/:id", (req, res) => {
+apiRouter.get("/books/:id", async (req, res) => {
     try {
         const id = req.bookId;
-        const book = books.find((book) => book.id === id);
+        const book = await getBookById(id);
         if (!book) {
             const e = new Error(`Book with id ${id} not found`);
             e.status = 404;
