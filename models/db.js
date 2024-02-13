@@ -37,10 +37,18 @@ const isValidBook = (book) => {
         e.status = 400;
         throw e;
     }
-    if (!book.status || !bookStatus.includes(book.status)) {
-        const e = new Error(
-            "Book status must be either to read, reading or read!"
-        );
+    if (!book.number_of_pages || isNaN(Number(book.number_of_pages))) {
+        const e = new Error("Number of pages must be a number!");
+        e.status = 400;
+        throw e;
+    }
+    if (!book.publication_year || isNaN(Number(book.publication_year))) {
+        const e = new Error("Publication year must be a number!");
+        e.status = 400;
+        throw e;
+    }
+    if (!book.publication_year > new Date().getFullYear) {
+        const e = new Error("Publication year cannot be in the future!");
         e.status = 400;
         throw e;
     }
@@ -66,15 +74,21 @@ const getBookById = async (id) => {
     return result.rows;
 };
 
-const addBook = (book) => {
+const addBook = async (book) => {
     if (isValidBook(book)) {
-        lastId++;
-        const bookToAdd = {
-            id: lastId,
-            ...book,
-        };
-        books.push(bookToAdd);
-        return bookToAdd;
+        const {
+            title,
+            isbn,
+            author,
+            genre,
+            number_of_pages,
+            publication_year,
+        } = book;
+        const result = await pool.query(
+            "INSERT INTO books (title, isbn, author, genre, number_of_pages, publication_year) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+            [title, isbn, author, genre, number_of_pages, publication_year]
+        );
+        return result.rows[0].isbn;
     }
 };
 

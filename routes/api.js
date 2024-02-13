@@ -21,9 +21,6 @@ apiRouter.param("id", (req, res, next, id) => {
 apiRouter.get("/books", async (req, res) => {
     try {
         const books = await getBooks();
-        if (!books) {
-            throw new Error();
-        }
         res.status(200).json(books);
     } catch (err) {
         console.log(err);
@@ -44,7 +41,7 @@ apiRouter.get("/books/:id", async (req, res) => {
             e.status = 404;
             throw e;
         }
-        res.send(book);
+        res.status(200).json(book);
     } catch (err) {
         console.log(err);
         if (err.status) {
@@ -55,14 +52,11 @@ apiRouter.get("/books/:id", async (req, res) => {
     }
 });
 
-apiRouter.post("/books", (req, res) => {
+apiRouter.post("/books", async (req, res) => {
     try {
         const body = req.body;
-        const newBook = addBook(body);
-        if (!newBook) {
-            throw new Error("Book could not be added");
-        }
-        res.status(201).send(newBook);
+        const newBookIsbn = await addBook(body);
+        res.status(201).send(`Book added with ISBN ${newBookIsbn}`);
     } catch (err) {
         console.log(err);
         if (err.status) {
