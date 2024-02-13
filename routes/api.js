@@ -43,7 +43,7 @@ apiRouter.get("/books/:id", async (req, res) => {
         }
         res.status(200).json(book);
     } catch (err) {
-        console.log(err);
+        console.log(err); // this shows the entire error + stack trace
         if (err.status) {
             res.status(err.status).send(err.message);
         } else {

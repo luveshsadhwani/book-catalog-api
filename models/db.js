@@ -1,29 +1,18 @@
 const { pool } = require("../db/index");
 
-const books = [
-    {
-        id: 1,
-        title: "ABC",
-        author: "Me",
-        genre: "Thriller",
-        status: "Reading",
-    },
-    {
-        id: 2,
-        title: "DEF",
-        author: "You",
-        genre: "Comedy",
-        status: "Read",
-    },
-];
-
-let lastId = 2;
-
-const bookStatus = ["to read", "reading", "read"];
-
 const isValidBook = (book) => {
     if (!book.title || typeof book.title !== "string") {
         const e = new Error("Book must have title!");
+        e.status = 400;
+        throw e;
+    }
+    if (!book.isbn || typeof book.isbn !== "string") {
+        const e = new Error("Book must have isbn!");
+        e.status = 400;
+        throw e;
+    }
+    if (book.isbn.length !== 10 && book.isbn.length !== 13) {
+        const e = new Error("ISBN must be either 10 or 13 characters long!");
         e.status = 400;
         throw e;
     }
@@ -71,7 +60,7 @@ const getBookById = async (id) => {
     const result = await pool.query("SELECT * FROM books WHERE isbn = $1", [
         id,
     ]);
-    return result.rows;
+    return result.rows[0];
 };
 
 const addBook = async (book) => {
@@ -116,7 +105,6 @@ const deleteBook = async (id) => {
 };
 
 module.exports = {
-    books,
     getBooks,
     addBook,
     updateBook,
