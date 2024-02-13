@@ -83,13 +83,10 @@ apiRouter.put("/book/:id", async (req, res) => {
     }
 });
 
-apiRouter.delete("/book/:id", (req, res) => {
+apiRouter.delete("/book/:id", async (req, res) => {
     try {
-        const books = deleteBook(req.bookId);
-        if (!books) {
-            throw new Error("Book could not be deleted");
-        }
-        res.status(204).send();
+        const deletedBookId = await deleteBook(req.bookId);
+        res.status(200).send(`Book deleted with ISBN ${deletedBookId}`);
     } catch (err) {
         console.log(err);
         if (err.status) {

@@ -110,15 +110,9 @@ const updateBook = async (bookToUpdate) => {
     }
 };
 
-const deleteBook = (id) => {
-    const index = books.findIndex((book) => book.id === id);
-    if (index === -1) {
-        const e = new Error(`Book with id ${id} not found`);
-        e.status = 404;
-        throw e;
-    }
-    books.splice(index, 1);
-    return books;
+const deleteBook = async (id) => {
+    await pool.query("DELETE FROM books WHERE isbn = $1", [id]);
+    return id;
 };
 
 module.exports = {
