@@ -24,7 +24,6 @@ passport.use(
             callbackURL: "/auth/google/callback",
         },
         (accessToken, refreshToken, profile, cb) => {
-            console.log(cb);
             return cb(null, profile);
         }
     )
@@ -63,7 +62,6 @@ app.get(
     "/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     function (req, res) {
-        console.log(req);
         // Successful authentication, redirect home.
         res.redirect("/");
     }
