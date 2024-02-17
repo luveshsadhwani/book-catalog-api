@@ -38,13 +38,19 @@ passport.deserializeUser(function (obj, done) {
     done(null, obj);
 });
 
-app.use(
-    session({
-        secret: "secret",
-        resave: false, // generally keep this to false
-        saveUninitialized: true,
-    })
-);
+// using secure cookies in production
+const sessionOptions = {
+    secret: "secret",
+    resave: false, // generally keep this to false
+    saveUninitialized: true,
+    cookie: {},
+};
+
+if (app.get("env") === "production") {
+    sess.cookie.secure = true; // serve secure cookies
+}
+
+app.use(session(sessionOptions));
 
 // session management - once oauth verification is complete, we now need to store session data
 app.use(passport.initialize());
