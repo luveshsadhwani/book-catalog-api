@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --env-file=.env server.js"
+        "dev": "NODE_ENV=development nodemon --env-file=.env server.js"
     },
     "keywords": [],
     "author": "",
