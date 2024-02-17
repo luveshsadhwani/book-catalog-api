@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const bodyParser = require("body-parser");
 const apiRouter = require("./routes/api");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -14,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Add middleware - cors, morgan, body-parser
 app.use(cors());
 app.use(morgan("tiny"));
-app.use(bodyParser.json());
+app.use(express.json());
 
 // configure passport strategy to use google auth 2.0
 passport.use(
