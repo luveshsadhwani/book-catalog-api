@@ -101,3 +101,11 @@ Using passport and google auth
 4. Decide on session data storage method and install relevant packages
 5. Add session storage middleware
 6. Add serialization and deserialization + session management from passport middleware
+
+Cookie-session is not supported by passport from version 0.6 onwards. There is no solution implemented currently, so i'll use express session instead to keep up to date with passports newer versions.
+
+### Express session and cookies
+
+User data is stored as sessions in memory. Each session gets a session ID. Express session will then sign the sessionID to be used as a cookie. THe signing key is the `secret` key.
+
+Using memory store for session is only for development and does not scale well. Use a data store like `redis` instead
