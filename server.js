@@ -6,8 +6,6 @@ const apiRouter = require("./routes/api");
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-
 // Add middleware - cors, morgan, body-parser
 app.use(cors());
 app.use(morgan("tiny"));
@@ -21,6 +19,11 @@ app.get("/", (req, res) => {
     res.send();
 });
 
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-});
+module.exports = app;
+
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Listening on port ${PORT}`);
+    });
+}

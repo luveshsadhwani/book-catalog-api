@@ -20,7 +20,6 @@ const {
 } = require("../models/db");
 
 // books
-const Books = new BookData();
 class BookData {
     constructor(type = "mock") {
         if (type === "mock") {
@@ -38,6 +37,8 @@ class BookData {
         }
     }
 }
+
+const Books = new BookData();
 
 apiRouter.get("/books", async (req, res) => {
     try {
@@ -59,7 +60,7 @@ apiRouter.get("/books/:id", async (req, res) => {
         validateBookIsbn(isbn);
         const book = await Books._getBookById(isbn);
         if (!book) {
-            const e = new Error(`Book with id ${id} not found`);
+            const e = new Error(`Book with isbn ${isbn} not found`);
             e.status = 404;
             throw e;
         }
@@ -125,7 +126,6 @@ apiRouter.delete("/book/:id", async (req, res) => {
 });
 
 // Goals
-const Goals = new GoalData();
 class GoalData {
     constructor(type = "mock") {
         this._getOngoingGoals = getOngoingGoalsFromMock;
@@ -136,6 +136,8 @@ class GoalData {
         this._deleteGoal = deleteGoalFromMock;
     }
 }
+
+const Goals = new GoalData();
 
 apiRouter.get("/goals/ongoing", async (req, res) => {
     try {
@@ -237,7 +239,7 @@ apiRouter.delete("/goals/:id", async (req, res) => {
 });
 
 const validateBookIsbn = (isbn) => {
-    if (isbn.length !== 13 || isbn.length !== 10) {
+    if (isbn.length !== 13 && isbn.length !== 10) {
         const e = new Error("ISBN must be either 10 or 13 characters long!");
         e.status = 400;
         throw e;
